@@ -16,7 +16,6 @@ class Tokenizer:
 
             if word not in word_count:
                 word_count[word] = 0
-
             word_count[word] += 1
 
         return word_count

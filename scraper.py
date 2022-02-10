@@ -97,7 +97,6 @@ def add_page_index(total_count, url_hash, url, word_count_dict):
 
 def calculate_page_metric(soup, url_hash, url, tokenizer):
     text = soup.get_text(separator="\n", strip=True)
-    ln = 0
     word_count = tokenizer.word_tokenizer_count(text)
     word_count = sorted(word_count.items(), key=lambda item: item[1], reverse=True)
     s = ''
