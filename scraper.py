@@ -69,12 +69,10 @@ def is_valid(url, oldUrl = None):
             # in the case that a page with query param is linked from another page with query param
             if "=" in oldUrl and "?" in oldUrl and "=" in url and "?" in url:
                 if oldUrl.split("=")[1] == url.split("=")[1]:
-                    print("page duplicate: ", url, " ", oldUrl)
                     return False
             # in the case that a page with query param is linked from a base url
             elif "?" in url and "=" in url:
                 if oldUrl == url.split("?")[0] or oldUrl+"/" == url.split("?")[0]:
-                    print("page duplicate: ", url, " ", oldUrl)
                     return False
        
         return not re.match(
