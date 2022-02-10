@@ -3,9 +3,10 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from utils import get_urlhash
 
+
 def scraper(url, resp, tokenizer):
     links = extract_next_links(url, resp, tokenizer)
-    return [link for link in links if is_valid(link)]
+    return [link for link in links if is_valid(link, url)]
 
 
 def extract_next_links(url, resp, tokenizer):
@@ -48,7 +49,7 @@ def extract_next_links(url, resp, tokenizer):
     return links
 
 
-def is_valid(url):
+def is_valid(url, oldUrl = None):
     # Decide whether to crawl this url or not. 
     # If you decide to crawl it, return True; otherwise return False.
     # There are already some conditions that return False.
@@ -66,6 +67,18 @@ def is_valid(url):
         if parsed.hostname == "www.today.uci.edu" and not \
             re.match(r"^/department/information_computer_sciences/", parsed.path):
             return False
+
+        # this clause makes sure that the new url is not exactly the same except for a different query parameter
+        # note that oldUrl has a default value None and so this check will not be run if no oldUrl value is passed in
+        if oldUrl != None:
+            # in the case that a page with query param is linked from another page with query param
+            if "=" in oldUrl and "?" in oldUrl and "=" in url and "?" in url:
+                if oldUrl.split("=")[1] == url.split("=")[1]:
+                    return False
+            # in the case that a page with query param is linked from a base url
+            elif "?" in url and "=" in url:
+                if oldUrl == url.split("?")[0] or oldUrl+"/" == url.split("?")[0]:
+                    return False
        
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
