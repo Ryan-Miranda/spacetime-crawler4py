@@ -1,13 +1,14 @@
 import re
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
+from utils import get_urlhash
 
-def scraper(url, resp):
-    links = extract_next_links(url, resp)
+def scraper(url, resp, tokenizer):
+    links = extract_next_links(url, resp, tokenizer)
     return [link for link in links if is_valid(link)]
 
 
-def extract_next_links(url, resp):
+def extract_next_links(url, resp, tokenizer):
     # Implementation required.
     # url: the URL that was used to get the page
     # resp.url: the actual url of the page
@@ -23,6 +24,9 @@ def extract_next_links(url, resp):
         return []
 
     soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
+    url_hash = get_urlhash(url)
+    save_page(url_hash, soup)
+    calculate_page_metric(soup, url_hash, url, tokenizer)
     found_links = soup.find_all('a', href=True)
     links = []
 
@@ -77,3 +81,26 @@ def is_valid(url):
         print ("TypeError for ", parsed)
         # raise
         return False
+
+
+def save_page(url_hash, data):
+    file_path = './tmp/pages/' + str(url_hash)
+    with open(file_path, 'w') as f:
+        f.write(str(data))
+
+
+# wordCount, hashVal, url, top50CommonWords
+def add_page_index(total_count, url_hash, url, word_count_dict):
+    with open('./tmp/pg_index.txt', 'a') as f:
+        f.write(str(total_count) + '\t' + url_hash + '\t' + url + '\t' + word_count_dict + '\n')
+
+
+def calculate_page_metric(soup, url_hash, url, tokenizer):
+    text = soup.get_text(separator="\n", strip=True)
+    ln = 0
+    word_count = tokenizer.word_tokenizer_count(text)
+    word_count = sorted(word_count.items(), key=lambda item: item[1], reverse=True)
+    s = ''
+    for w, cnt in word_count:
+        s = s + w + ',' + str(cnt) + '|'
+    add_page_index(len(word_count), url_hash, url, s)
