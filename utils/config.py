@@ -18,3 +18,9 @@ class Config(object):
 
         self.cache_server = None
         self.request_time_out = int(config["REQUESTS"]["REQUEST_TIMEOUT"])
+
+        # TMP
+        self.tmp_folder=config['RESULTS']['URL_TMP']
+        self.tmp_pages_folder=config['RESULTS']['URL_TMP_PAGES']
+        self.tmp_pg_index_txt=config['RESULTS']['URL_PG_INDEX_TXT']
+        self.unique_url_file = config['RESULTS']['URL_UNIQUE_FILE']

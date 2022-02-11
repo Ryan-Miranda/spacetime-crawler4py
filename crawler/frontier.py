@@ -7,12 +7,14 @@ from queue import Queue, Empty
 from utils import get_logger, get_urlhash, normalize
 from scraper import is_valid
 
+
 class Frontier(object):
     def __init__(self, config, restart):
         self.logger = get_logger("FRONTIER")
         self.config = config
         self.to_be_downloaded = list()
-        
+        self.unique_pages = set()
+
         if not os.path.exists(self.config.save_file) and not restart:
             # Save file does not exist, but request to load save.
             self.logger.info(
@@ -53,6 +55,9 @@ class Frontier(object):
         except IndexError:
             return None
 
+    def insert_tbd_front_of_queue(self, url):
+        self.to_be_downloaded.insert(0, url)
+
     def add_url(self, url):
         url = normalize(url)
         urlhash = get_urlhash(url)
@@ -60,7 +65,7 @@ class Frontier(object):
             self.save[urlhash] = (url, False)
             self.save.sync()
             self.to_be_downloaded.append(url)
-    
+
     def mark_url_complete(self, url):
         urlhash = get_urlhash(url)
         if urlhash not in self.save:
