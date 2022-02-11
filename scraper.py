@@ -80,7 +80,7 @@ def is_valid(url, oldUrl = None):
                 if oldUrl == url.split("?")[0] or oldUrl+"/" == url.split("?")[0]:
                     return False
        
-        return not re.match(
+        return (not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
             + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
@@ -88,8 +88,7 @@ def is_valid(url, oldUrl = None):
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()) 
-            and (not re.match(r".*/pdf/", parsed.path.lower())))
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())) and (not re.match(r".*/pdf/", parsed.path.lower()))
 
     except TypeError:
         print ("TypeError for ", parsed)
