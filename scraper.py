@@ -73,7 +73,7 @@ def is_valid(url, oldUrl = None):
         if oldUrl != None:
             # in the case that a page with query param is linked from another page with query param
             if "=" in oldUrl and "?" in oldUrl and "=" in url and "?" in url:
-                if oldUrl.split("=")[1] == url.split("=")[1]:
+                if oldUrl.split("?")[1] == url.split("?")[1]:
                     return False
             # in the case that a page with query param is linked from a base url
             elif "?" in url and "=" in url:
