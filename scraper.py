@@ -104,7 +104,7 @@ def save_page(url_hash, data):
 
 # wordCount, hashVal, url, top50CommonWords
 def add_page_index(total_count, url_hash, url, word_count_dict):
-    with open('./tmp/pg_index.txt', 'a') as f:
+    with open('tmp/pg_index.txt', 'a') as f:
         f.write(str(total_count) + '\t' + url_hash + '\t' + url + '\t' + word_count_dict + '\n')
 
 
