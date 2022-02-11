@@ -73,22 +73,22 @@ def is_valid(url, oldUrl = None):
         if oldUrl != None:
             # in the case that a page with query param is linked from another page with query param
             if "=" in oldUrl and "?" in oldUrl and "=" in url and "?" in url:
-                if oldUrl.split("=")[1] == url.split("=")[1]:
+                if oldUrl.split("?")[1] == url.split("?")[1]:
                     return False
             # in the case that a page with query param is linked from a base url
             elif "?" in url and "=" in url:
                 if oldUrl == url.split("?")[0] or oldUrl+"/" == url.split("?")[0]:
                     return False
        
-        return not re.match(
+        return (not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
             + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
-            + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
+            + r"|ps|eps|tex|ppt|pptx|ppsx|doc|docx|xls|xlsx|names"
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())) and (not re.match(r".*/pdf/", parsed.path.lower()))
 
     except TypeError:
         print ("TypeError for ", parsed)
