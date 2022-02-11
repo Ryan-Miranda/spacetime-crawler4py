@@ -62,8 +62,8 @@ def is_valid(url):
         if parsed.hostname == "www.today.uci.edu" and not \
             re.match(r"^/department/information_computer_sciences/", parsed.path):
             return False
-
-        return (not re.match(
+       
+        return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
             + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
