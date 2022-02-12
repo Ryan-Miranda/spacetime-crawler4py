@@ -54,6 +54,10 @@ def is_valid(url, oldUrl = None):
     # If you decide to crawl it, return True; otherwise return False.
     # There are already some conditions that return False.
     try:
+        # if url does not contain http:// or https://
+        if not re.match(r"((http|https)://)", url):
+            return False
+
         parsed = urlparse(url)
 
         if parsed.scheme not in {"http", "https"}:
