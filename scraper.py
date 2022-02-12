@@ -1,13 +1,16 @@
+import logging
 import re
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from utils import get_urlhash
+from utils.PageInfoMetric import ngram_entropy
 
 
 def scraper(url, resp, tokenizer):
+    if not is_good_entropy(url, resp):
+        return []
     links = extract_next_links(url, resp, tokenizer)
     return [link for link in links if is_valid(link, url)]
-
 
 def extract_next_links(url, resp, tokenizer):
     # Implementation required.
@@ -116,3 +119,22 @@ def calculate_page_metric(soup, url_hash, url, tokenizer):
     for w, cnt in word_count:
         s = s + w + ',' + str(cnt) + '|'
     add_page_index(len(word_count), url_hash, url, s)
+
+
+def is_good_entropy(url, resp):
+    if resp.status != 200:
+        return False
+
+    try:
+        soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
+        text = soup.get_text(separator="\n", strip=True)
+        H = ngram_entropy(text)
+        # print('Entropy: ', H)
+        if H >= 6:
+            return True
+    except:
+        print(f'ERROR: scraper :: is_good_entropy :: {url}')
+
+    return False
+
+
