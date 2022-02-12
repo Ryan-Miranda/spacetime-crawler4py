@@ -66,11 +66,9 @@ class GenerateResult:
 
     def display_subdomain(self):
         print('Sub Domains: ')
-        for k in self.subdomain_urls:
-            print(f'{k}, {self.subdomain_urls[k]}')
-
-    def get_longest_page(self):
-        pass
+        urls = sorted(self.subdomain_urls.items(), key=lambda k: k[0], reverse=True)
+        for k, val in urls:
+            print(f'{k}, {val}')
 
 
 if __name__ == '__main__':
