@@ -6,8 +6,8 @@ from utils import get_urlhash
 from utils.PageInfoMetric import ngram_entropy
 
 
-def scraper(url, resp, tokenizer):
-    if not is_good_entropy(url, resp):
+def scraper(url, resp, tokenizer, config):
+    if not is_good_entropy(url, resp, config):
         return []
     links = extract_next_links(url, resp, tokenizer)
     return [link for link in links if is_valid(link, url)]
@@ -121,16 +121,15 @@ def calculate_page_metric(soup, url_hash, url, tokenizer):
     add_page_index(len(word_count), url_hash, url, s)
 
 
-def is_good_entropy(url, resp):
+def is_good_entropy(url, resp, config):
     if resp.status != 200:
         return False
-
     try:
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
         text = soup.get_text(separator="\n", strip=True)
         H = ngram_entropy(text)
         # print('Entropy: ', H)
-        if H >= 6:
+        if H >= config.entropy_threshold:
             return True
     except:
         print(f'ERROR: scraper :: is_good_entropy :: {url}')
