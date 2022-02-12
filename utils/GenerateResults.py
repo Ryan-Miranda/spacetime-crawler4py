@@ -60,13 +60,15 @@ class GenerateResult:
         t = 'ics.uci.edu'
         if subdomain.__contains__(t):
             key = subdomain[subdomain.index('://') + 3:subdomain.index(t) + len(t)]
+            if key.__contains__('www'):
+                key = key[key.index('www') + 4:]
             if key not in self.subdomain_urls:
                 self.subdomain_urls[key] = 0
             self.subdomain_urls[key] += 1
 
     def display_subdomain(self):
         print('Sub Domains: ')
-        urls = sorted(self.subdomain_urls.items(), key=lambda k: k[0], reverse=True)
+        urls = sorted(self.subdomain_urls.items(), key=lambda k: k[0])
         for k, val in urls:
             print(f'{k}, {val}')
 
