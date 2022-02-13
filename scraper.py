@@ -67,6 +67,11 @@ def is_valid(url, oldUrl=None):
 
         parsed = urlparse(url)
 
+        # parsed[:3] = (scheme, domain, path), if any of these are empty string, we want to return because
+        # the URL is badly formed
+        if any(p == "" for p in parsed[:3]):
+            return False
+
         if parsed.scheme not in {"http", "https"}:
             return False
 
