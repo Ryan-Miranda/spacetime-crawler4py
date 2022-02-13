@@ -1,7 +1,8 @@
-import logging
 import re
 from urllib.parse import urlparse
+
 from bs4 import BeautifulSoup
+
 from utils import get_urlhash
 from utils.PageInfoMetric import ngram_entropy
 
@@ -108,6 +109,12 @@ def save_page(url_hash, data):
         f.write(str(data))
 
 
+def save_cleaned_page(url_hash, data):
+    file_path = './tmp/cleanpages/' + str(url_hash)
+    with open(file_path, 'w') as f:
+        f.write(str(data))
+
+
 # wordCount, hashVal, url, top50CommonWords
 def add_page_index(total_count, url_hash, url, word_count_dict):
     with open('tmp/pg_index.txt', 'a') as f:
@@ -116,6 +123,7 @@ def add_page_index(total_count, url_hash, url, word_count_dict):
 
 def calculate_page_metric(soup, url_hash, url, tokenizer):
     text = soup.get_text(separator="\n", strip=True)
+    save_cleaned_page(url_hash, text)
     word_count = tokenizer.word_tokenizer_count(text)
     word_count = sorted(word_count.items(), key=lambda item: item[1], reverse=True)
     s = ''
@@ -127,7 +135,7 @@ def calculate_page_metric(soup, url_hash, url, tokenizer):
 def is_good_entropy(url, config, soup):
     text = soup.get_text(separator="\n", strip=True)
     H = ngram_entropy(text)
-    print('Entropy: ', H)
+    # print('Entropy: ', H)
     if H >= float(config.entropy_threshold):
         return True
     return False

@@ -35,33 +35,9 @@ def calc_entropy(ngram_prob):
     return -sum(tmp_entropy)
 
 
-def ngram_entropy(data, ngram=8):  # Default is 1-gram
+def ngram_entropy(data, ngram=8):  # Default is 8-gram
     data = clear_text(data).lower().replace('\n', ' ')
     n_gram_count = get_ngram_count(data, ngram)
     n_gram_prob = get_ngram_probabilities(n_gram_count)
     H = calc_entropy(n_gram_prob)
     return H
-
-
-def fingerprinting_similarity_score():
-    pass
-
-#
-# if __name__ == '__main__':
-#     f_lorem_ipsum = '../tmp/test/loremipsum'
-#     eng_small = '../tmp/test/english0'
-#     eng_1 = '../tmp/test/english1'
-#     for i in range(1, 11):
-#         print('n-gram N : ', i)
-#         with open(eng_1, 'r') as f:
-#             lines = f.readlines()
-#             ngram_entropy(''.join(lines), i)
-#
-#         with open(eng_small, 'r') as f:
-#             lines = f.readlines()
-#             ngram_entropy(''.join(lines), i)
-#
-#         with open(f_lorem_ipsum, 'r') as f:
-#             lines = f.readlines()
-#             ngram_entropy(''.join(lines), i)
-#         print('====================')

@@ -24,6 +24,9 @@ def create_local_tmp():
     if not os.path.isdir('./tmp/pages'):
         os.mkdir('./tmp/pages')
 
+    if not os.path.isdir('./tmp/cleanpages'):
+        os.mkdir('./tmp/cleanpages')
+
     if not os.path.isfile('tmp/pg_index.txt'):
         with open('tmp/pg_index.txt', 'w') as f:
             f.write('# wordCount, hashVal, url, top50CommonWords' + '\n')
