@@ -24,3 +24,6 @@ class Config(object):
         self.tmp_pages_folder=config['RESULTS']['URL_TMP_PAGES']
         self.tmp_pg_index_txt=config['RESULTS']['URL_PG_INDEX_TXT']
         self.unique_url_file = config['RESULTS']['URL_UNIQUE_FILE']
+
+        # INFORMATION
+        self.entropy_threshold = config['CRAWLER']['ENTROPY_THRESHOLD']

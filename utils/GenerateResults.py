@@ -4,7 +4,8 @@ import os
 
 class GenerateResult:
     def __init__(self):
-        self.top50Word = {}
+        self.top50Word = dict()
+        self.subdomain_urls = dict()
 
     def get_unique_pages_list(self):
         cnt = 0
@@ -16,39 +17,69 @@ class GenerateResult:
                 cnt += 1
         print("Count of Unique URLS visted : ", (cnt - 1))
 
-    def get_subdomains(self):
-        pass
-
-    def get_longest_page(self):
-        pass
-
-    def get_top50_words(self):
-        pass
-
-    def read_file(self):
+    def longest_page_interms_of_word_count(self):
         path = '../tmp/pg_index_example.txt'
         if not os.path.isfile(path):
             print('ERROR :: Something went wrong file does not exist.')
             return
-        cnt = 3
         max_size_page, max_size_url = 0, ''
+        top50Word = dict()
         with open(path, newline='') as csv_file:
             reader = csv.reader(csv_file, delimiter='\t')
+            skip = True
             for row in reader:
-                print(type(row))
+                if skip:
+                    skip = False
+                    continue
                 if int(row[0]) > max_size_page:
                     max_size_page = int(row[0])
                     max_size_url = row[2]
+                self.get_top50Words(row[3])
+                self.get_subdomains(row[2])
 
-                if cnt == 0:
-                    break
-                cnt -= 1
+        print(f'Max sized page: {max_size_page} from url: {max_size_url}')
 
-        print('Max sized page: ', max_size_page)
-        print('URL: ', max_size_url)
+    def get_top50Words(self, d):
+        data = d.split('|')
+        for d in data[:len(data) - 1]:
+            tmp = d[::-1]
+            cnt, word = int(tmp[:tmp.index(',')][::-1]), tmp[tmp.index(',') + 1:][::-1]
+            if word not in self.top50Word:
+                self.top50Word[word] = cnt
+                continue
+            self.top50Word[word] += cnt
+        return
+
+    def display_top50_words(self):
+        top50Word_sorted = sorted(self.top50Word.items(), key=lambda d: d[1], reverse=True)[:50]
+        print('Top overall 50 words: ')
+        for a, b in top50Word_sorted:
+            print(f'{a}\t{b}')
+
+    def get_subdomains(self, subdomain):
+        t = 'ics.uci.edu'
+        if subdomain.__contains__(t):
+            key = subdomain[subdomain.index('://') + 3:subdomain.index(t) + len(t)]
+            if key.__contains__('www'):
+                key = key[key.index('www') + 4:]
+            if key not in self.subdomain_urls:
+                self.subdomain_urls[key] = 0
+            self.subdomain_urls[key] += 1
+
+    def display_subdomain(self):
+        print('Sub Domains: ')
+        urls = sorted(self.subdomain_urls.items(), key=lambda k: k[0])
+        for k, val in urls:
+            print(f'{k}, {val}')
 
 
 if __name__ == '__main__':
     g = GenerateResult()
     g.get_unique_pages_list()
-    g.read_file()
+    print('---------------------------')
+    g.longest_page_interms_of_word_count()
+    print('---------------------------')
+    g.display_top50_words()
+    print('---------------------------')
+    g.display_subdomain()
+    print('---------------------------')
