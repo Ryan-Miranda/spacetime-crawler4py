@@ -34,6 +34,10 @@ def create_local_tmp():
     if not os.path.isfile('./tmp/unique_file_urls.txt'):
         with open('tmp/unique_file_urls.txt', 'w') as f:
             f.write('#Unique URls' + '\n')
+        
+    if not os.path.isfile("tmp/pagehashes"):
+        with open("tmp/pagehashes", "w") as f:
+            f.write("")
 
 
 if __name__ == "__main__":

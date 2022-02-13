@@ -1,10 +1,12 @@
-import re
+import re, os
 from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 
 from utils import get_urlhash
 from utils.PageInfoMetric import ngram_entropy
+from utils.SimilarityChecks import calc_simhash, simhash_similarity_score
+from utils.Tokenizer import Tokenizer
 
 
 def scraper(url, resp, tokenizer, config):
@@ -22,13 +24,17 @@ def extract_next_links(url, resp, tokenizer, config):
     #         resp.raw_response.url: the url, again
     #         resp.raw_response.content: the content of the page!
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
-
     if resp.status != 200:
         print(f"ERROR {resp.status} downloading {resp.url}")
         return []
 
     soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
     if not is_good_entropy(url, config, soup):
+        return []
+
+
+    if is_similar(url, config, soup):
+        print("SKIPPING DUE TO SIMILARITY - ", url)
         return []
 
     url_hash = get_urlhash(url)
@@ -62,7 +68,7 @@ def is_valid(url, oldUrl=None):
     try:
         # if url does not contain http:// or https:// - maybe more exhaustive 
         # validation can be implemented
-		# source - https://gist.github.com/jarridlima/965022c848c37919664a47a83c034459
+        # source - https://gist.github.com/jarridlima/965022c848c37919664a47a83c034459
         if not re.match(r"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$", url):
             return False
 
@@ -144,4 +150,23 @@ def is_good_entropy(url, config, soup):
     # print('Entropy: ', H)
     if H >= float(config.entropy_threshold):
         return True
+    return False
+
+def is_similar(url, config, soup):
+    hashes = open("./tmp/pagehashes", "r+")
+    text = soup.get_text(separator="\n", strip=True)
+    t = Tokenizer()
+    word_weights = t.word_tokenizer_count(text)
+    simhash = calc_simhash(word_weights)
+    oldHashes = hashes.readlines()
+
+    for hash in oldHashes:
+        intHash = [int(v) for v in hash.strip("\n").split(",")] 
+        if (simhash_similarity_score(simhash, intHash) 
+            >= float(config.similarity_threshold)):
+            return True
+
+    # if not similar write to file
+    simhash = [str(v) for v in simhash]
+    hashes.write(",".join(simhash) + "\n")
     return False

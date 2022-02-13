@@ -27,3 +27,4 @@ class Config(object):
 
         # INFORMATION
         self.entropy_threshold = config['CRAWLER']['ENTROPY_THRESHOLD']
+        self.similarity_threshold = config['CRAWLER']['SIMILARITY_THRESHOLD']
