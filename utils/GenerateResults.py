@@ -18,7 +18,7 @@ class GenerateResult:
         print("Count of Unique URLS visted : ", (cnt - 1))
 
     def longest_page_interms_of_word_count(self):
-        path = '../tmp/pg_index_example.txt'
+        path = '../tmp/pg_index.txt'
         if not os.path.isfile(path):
             print('ERROR :: Something went wrong file does not exist.')
             return
