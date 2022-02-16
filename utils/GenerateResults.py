@@ -22,32 +22,43 @@ class GenerateResult:
         if not os.path.isfile(path):
             print('ERROR :: Something went wrong file does not exist.')
             return
+
         max_size_page, max_size_url = 0, ''
-        top50Word = dict()
-        with open(path, newline='') as csv_file:
-            reader = csv.reader(csv_file, delimiter='\t')
-            skip = True
-            for row in reader:
+
+        skip = True
+
+        with open(path, 'r') as f:
+            while True:
+                line = f.readline()
+                if not line:
+                    break
+
                 if skip:
                     skip = False
                     continue
-                if int(row[0]) > max_size_page:
-                    max_size_page = int(row[0])
-                    max_size_url = row[2]
-                self.get_top50Words(row[3])
-                self.get_subdomains(row[2])
+                line = line.split('\t')
+                if int(line[0]) > max_size_page:
+                    max_size_page = int(line[0])
+                    max_size_url = line[2]
+
+                self.get_top50Words(line[3])
+                self.get_subdomains(line[2])
 
         print(f'Max sized page: {max_size_page} from url: {max_size_url}')
 
-    def get_top50Words(self, d):
-        data = d.split('|')
+    def get_top50Words(self, tmp_d):
+        data = tmp_d.split('|')
+        data = data[:len(data) - 1]
         for d in data[:len(data) - 1]:
             tmp = d[::-1]
-            cnt, word = int(tmp[:tmp.index(',')][::-1]), tmp[tmp.index(',') + 1:][::-1]
-            if word not in self.top50Word:
-                self.top50Word[word] = cnt
-                continue
-            self.top50Word[word] += cnt
+            if tmp.__contains__(','):
+                try:
+                    cnt, word = int(tmp[:tmp.index(',')][::-1]), tmp[tmp.index(',') + 1:][::-1]
+                    if word not in self.top50Word:
+                        self.top50Word[word] = 0
+                    self.top50Word[word] += cnt
+                except:
+                    pass
         return
 
     def display_top50_words(self):
