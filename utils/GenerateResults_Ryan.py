@@ -37,7 +37,8 @@ subdomains = dict()
 for url in unique_urls:
     if pattern.match(url):
 
-        domain = urlparse(url).netloc
+        # lower the domain bc hosts are case insensitive
+        domain = urlparse(url).netloc.lower()
 
         # some domains have www at the beginning, remove that
         if 'www.' == domain[:4]:
@@ -55,4 +56,4 @@ for url in unique_urls:
 print(f"Subdomains under ics.uci.edu: {len(subdomains)}")
 
 for domain in sorted(subdomains):
-    print(f"{domain}, {subdomains[domain]}")
+    print(f"{domain} -> {subdomains[domain]}")

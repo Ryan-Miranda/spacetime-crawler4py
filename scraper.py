@@ -67,9 +67,9 @@ def is_valid(url, oldUrl=None):
 
         parsed = urlparse(url)
 
-        # parsed[:3] = (scheme, domain, path), if any of these are empty string, we want to return because
-        # the URL is badly formed
-        if any(p == "" for p in parsed[:3]):
+        # parsed[:2] = (scheme, domain, path), if any of the first 2 are empty string, we want to return because
+        # the URL is badly formed, but if path is empty thats fine
+        if any(p == "" for p in parsed[:2]):
             return False
 
         if parsed.scheme not in {"http", "https"}:
@@ -105,6 +105,7 @@ def is_valid(url, oldUrl=None):
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|java|py|rkt|io|odc|r|m|diff"
             + r"|thmx|mso|arff|rtf|jar|csv"
+            + r"|java|py|rkt|io|odc|r|m|diff"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())) and (
                    not re.match(r".*/pdf/", parsed.path.lower()))
 
