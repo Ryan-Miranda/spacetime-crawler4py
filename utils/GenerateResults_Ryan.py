@@ -10,9 +10,19 @@ with open('tmp/unique_file_urls.txt') as f:
     for line in f:
         l = line.strip()
 
-        if l not in unique_urls:
-            unique_urls[l] = 0
-        unique_urls[l] += 1
+        if not re.match(
+            r".*\.(css|js|bmp|gif|jpe?g|ico"
+            + r"|png|tiff?|mid|mp2|mp3|mp4"
+            + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
+            + r"|ps|eps|tex|ppt|pptx|ppsx|doc|docx|xls|xlsx|names"
+            + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
+            + r"|epub|dll|cnf|tgz|sha1"
+            + r"|java|py|rkt|io|odc|r|m|diff|"
+            + r"|thmx|mso|arff|rtf|jar|csv"
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", l):
+            if (l not in unique_urls):
+                unique_urls[l] = 0
+            unique_urls[l] += 1
 
 print(f"Unique URLs: {len(unique_urls)}")
 
