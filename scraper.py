@@ -61,7 +61,7 @@ def is_valid(url, oldUrl=None):
     try:
         # if url does not contain http:// or https:// - maybe more exhaustive 
         # validation can be implemented
-		# source - https://gist.github.com/jarridlima/965022c848c37919664a47a83c034459
+        # source - https://gist.github.com/jarridlima/965022c848c37919664a47a83c034459
         if not re.match(r"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$", url):
             return False
 
@@ -103,6 +103,7 @@ def is_valid(url, oldUrl=None):
             + r"|ps|eps|tex|ppt|pptx|ppsx|doc|docx|xls|xlsx|names"
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
+            + r"|java|py|rkt|io|odc|r|m|diff|"
             + r"|thmx|mso|arff|rtf|jar|csv"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())) and (
                    not re.match(r".*/pdf/", parsed.path.lower()))
